@@ -20,9 +20,7 @@ const validationSettings = {
 };
 
 // включение валидации вызовом enableValidation
-// все настройки передаются при вызове
 enableValidation(validationSettings);
-
 
 import { initialCards } from "./cards.js";
 import { createCardElement, deleteCard, likeCard } from "./components/card.js";
@@ -85,12 +83,12 @@ const handleCardFormSubmit = (evt) => {
       },
       {
         onPreviewPicture: handlePreviewPicture,
-        onLikeIcon: likeCard,
-        onDeleteCard: deleteCard,
+        onLikeClick: likeCard,      // ✅ ИСПРАВЛЕНО
+        onDeleteClick: deleteCard,  // ✅ ИСПРАВЛЕНО
       }
     )
   );
-
+  cardForm.reset();  // ✅ ДОБАВЛЕНО
   closeModalWindow(cardFormModalWindow);
 };
 
@@ -120,13 +118,13 @@ initialCards.forEach((data) => {
   placesWrap.append(
     createCardElement(data, {
       onPreviewPicture: handlePreviewPicture,
-      onLikeIcon: likeCard,
-      onDeleteCard: deleteCard,
+      onLikeClick: likeCard,      // ✅ ИСПРАВЛЕНО
+      onDeleteClick: deleteCard,  // ✅ ИСПРАВЛЕНО
     })
   );
 });
 
-//настраиваем обработчики закрытия попапов
+// настраиваем обработчики закрытия попапов
 const allPopups = document.querySelectorAll(".popup");
 allPopups.forEach((popup) => {
   setCloseModalWindowEventListeners(popup);
