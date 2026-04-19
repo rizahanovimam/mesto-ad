@@ -60,6 +60,31 @@ const handlePreviewPicture = ({ name, link }) => {
   openModalWindow(imageModalWindow);
 };
 
+
+const handlechangeLikeCardStatus = (likeButton, cardId, likeCounter) => {
+  const isLiked = likeButton.classList.contains("card__like-button_is-active");
+
+  changeLikeCardStatus(cardId, isLiked)
+    .then((updatedCard) => {
+      likeButton.classList.toggle("card__like-button_is-active");
+      likeCounter.textContent = updatedCard.likes.length;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+
+const handleDeleteCard = (cardElement, cardId) => {
+  deleteCard(cardId) 
+    .then(() => {
+      cardElement.remove();
+    })
+    .catch(console.log);
+};
+
+
+
 const handleProfileFormSubmit = (evt) => {
   evt.preventDefault();
   profileTitle.textContent = profileTitleInput.value;
@@ -83,12 +108,12 @@ const handleCardFormSubmit = (evt) => {
       },
       {
         onPreviewPicture: handlePreviewPicture,
-        onLikeClick: likeCard,      // ✅ ИСПРАВЛЕНО
-        onDeleteClick: deleteCard,  // ✅ ИСПРАВЛЕНО
+        onLikeClick: likeCard,   
+        onDeleteClick: deleteCard,  
       }
     )
   );
-  cardForm.reset();  // ✅ ДОБАВЛЕНО
+  cardForm.reset();  
   closeModalWindow(cardFormModalWindow);
 };
 
@@ -118,8 +143,8 @@ initialCards.forEach((data) => {
   placesWrap.append(
     createCardElement(data, {
       onPreviewPicture: handlePreviewPicture,
-      onLikeClick: likeCard,      // ✅ ИСПРАВЛЕНО
-      onDeleteClick: deleteCard,  // ✅ ИСПРАВЛЕНО
+      onLikeClick: likeCard,      
+      onDeleteClick: deleteCard,  
     })
   );
 });
@@ -129,3 +154,30 @@ const allPopups = document.querySelectorAll(".popup");
 allPopups.forEach((popup) => {
   setCloseModalWindowEventListeners(popup);
 });
+
+
+
+Promise.all([getCardList(), getUserInfo()])
+  .then(([cards, userData]) => {
+    // Код отвечающий за отрисовку полученных данных
+    currentUserId = userData._id;
+
+    profileTitle.textContent = userData.name;
+    profileDescription.textContent = userData.about;
+    profileAvatar.style.backgroundImage = `url(${userData.avatar})`;
+
+    cards.forEach((card) => {
+      placesWrap.append(
+        createCardElement(card, {
+          currentUserId,
+          onPreviewPicture: handlePreviewPicture,
+          onLikeClick: handlechangeLikeCardStatus, 
+          onDeleteClick: handleDeleteCard,           
+        })
+      );
+    });
+  })
+  .catch((err) => {
+    console.log(err); // В случае возникновения ошибки выводим её в консоль
+  });
+  
