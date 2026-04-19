@@ -13,8 +13,16 @@ function hideInputError(formElement, inputElement, settings) {
 }
 
 function checkInputValidity(formElement, inputElement, settings) {
+    const customErrorMessage = inputElement.dataset.errorMessage;
     if (!inputElement.validity.valid) {
-        const errorMessage = inputElement.dataset.errorMessage || inputElement.validationMessage;
+        let errorMessage;
+        // Если есть кастомное сообщение И ошибка именно из-за несоответствия pattern
+        if (customErrorMessage && inputElement.validity.patternMismatch) {
+            errorMessage = customErrorMessage;
+        } else {
+            // Для остальных ошибок (required, minlength, maxlength, type mismatch) используем стандартное сообщение
+            errorMessage = inputElement.validationMessage;
+        }
         showInputError(formElement, inputElement, errorMessage, settings);
     } else {
         hideInputError(formElement, inputElement, settings);
