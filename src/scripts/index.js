@@ -126,24 +126,6 @@ const handleAvatarFromSubmit = (evt) => {
   });
 };
 
-// const handleCardFormSubmit = (evt) => {
-//   evt.preventDefault();
-//   placesWrap.prepend(
-//     createCardElement(
-//       {
-//         name: cardNameInput.value,
-//         link: cardLinkInput.value,
-//       },
-//       {
-//         onPreviewPicture: handlePreviewPicture,
-//         onLikeClick: likeCard,   
-//         onDeleteClick: deleteCard,  
-//       }
-//     )
-//   );
-//   cardForm.reset();  
-//   closeModalWindow(cardFormModalWindow);
-// };
 
 
 const handleCardFormSubmit = (evt) => {
@@ -163,7 +145,7 @@ const handleCardFormSubmit = (evt) => {
           },
           {
             onPreviewPicture: handlePreviewPicture,
-            onLikeClick: likeCard,
+            onLikeClick: handlechangeLikeCardStatus,
             onDeleteClick: deleteCard,
           }
         )
@@ -198,9 +180,6 @@ const handlechangeLikeCardStatus = (likeButton, cardId, likeCounter) => {
       console.log(err);
     });
 };
-
-
-
 
 
 
@@ -290,11 +269,6 @@ logoButton.addEventListener("click", handleLogoClick);
 
 
 
-
-
-
-
-
 // EventListeners
 profileForm.addEventListener("submit", handleProfileFormSubmit);
 cardForm.addEventListener("submit", handleCardFormSubmit);
@@ -316,16 +290,6 @@ openCardFormButton.addEventListener("click", () => {
   openModalWindow(cardFormModalWindow);
 });
 
-// отображение карточек
-initialCards.forEach((data) => {
-  placesWrap.append(
-    createCardElement(data, {
-      onPreviewPicture: handlePreviewPicture,
-      onLikeClick: likeCard,      
-      onDeleteClick: deleteCard,  
-    })
-  );
-});
 
 // настраиваем обработчики закрытия попапов
 const allPopups = document.querySelectorAll(".popup");
