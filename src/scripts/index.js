@@ -139,27 +139,26 @@ const handleCardFormSubmit = (evt) => {
     .then((newCard) => {
       placesWrap.prepend(
         createCardElement(
+          newCard,  
           {
-            name: newCard.name,
-            link: newCard.link,
-          },
-          {
-            currentUserId,              
+            currentUserId,
             onPreviewPicture: handlePreviewPicture,
             onLikeClick: handlechangeLikeCardStatus,
-            onDeleteClick: handleDeleteCard,  
+            onDeleteClick: handleDeleteCard,
           }
         )
       );
+      cardForm.reset();  
       closeModalWindow(cardFormModalWindow);
     })
     .catch((err) => {
       console.log(err);
     })
     .finally(() => {
-    renderLoading(submitButton, false, "Создать", "Создание...");
-  });
+      renderLoading(submitButton, false, "Создать", "Создание...");
+    });
 };
+
 
 const handleDeleteCard = (cardElement, cardId) => {
   deleteCard(cardId) 
